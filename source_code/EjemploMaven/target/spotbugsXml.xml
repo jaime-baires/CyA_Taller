@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<BugCollection sequence='0' release='' analysisTimestamp='1609780111227' version='4.0.4' timestamp='1609780089816'><Project projectName='PruebasMaven'><Jar>C:\Users\Jaime Escalante\new\PruebasMaven\target\classes</Jar><Plugin id='com.h3xstream.findsecbugs' enabled='true'></Plugin><SrcDir>C:\Users\Jaime Escalante\new\PruebasMaven\src\main\java</SrcDir><WrkDir>C:\Users\Jaime Escalante\new\PruebasMaven\target</WrkDir></Project><BugInstance instanceOccurrenceNum='0' instanceHash='cd4a7f54e2441f0cb881a2b1c21b3050' cweid='330' rank='12' abbrev='SECPR' category='SECURITY' priority='2' type='PREDICTABLE_RANDOM' instanceOccurrenceMax='0'><ShortMessage>Predictable pseudorandom number generator</ShortMessage><LongMessage>This random generator (java.util.Random) is predictable</LongMessage><Class classname='Prueba' primary='true'><SourceLine classname='Prueba' start='3' end='11' sourcepath='Prueba.java' sourcefile='Prueba.java'><Message>At Prueba.java:[lines 3-11]</Message></SourceLine><Message>In class Prueba</Message></Class><Method isStatic='true' classname='Prueba' signature='()Ljava/lang/String;' name='generateSecretToken' primary='true'><SourceLine endBytecode='61' classname='Prueba' start='10' end='11' sourcepath='Prueba.java' sourcefile='Prueba.java' startBytecode='0'></SourceLine><Message>In method Prueba.generateSecretToken()</Message></Method><SourceLine endBytecode='4' classname='Prueba' start='10' end='10' sourcepath='Prueba.java' sourcefile='Prueba.java' startBytecode='4' primary='true'><Message>At Prueba.java:[line 10]</Message></SourceLine><String value='java.util.Random'><Message>Value java.util.Random</Message></String></BugInstance><BugCategory category='SECURITY'><Description>Security</Description></BugCategory><BugPattern cweid='330' abbrev='SECPR' category='SECURITY' type='PREDICTABLE_RANDOM'><ShortDescription>Predictable pseudorandom number generator</ShortDescription><Details>
+            
+&lt;p&gt;The use of a predictable random value can lead to vulnerabilities when used in certain security critical contexts. For example, when the value is used as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a CSRF token: a predictable token can lead to a CSRF attack as an attacker will know the value of the token&lt;/li&gt;
+&lt;li&gt;a password reset token (sent by email): a predictable password token can lead to an account takeover, since an attacker will guess the URL of the "change password" form&lt;/li&gt;
+&lt;li&gt;any other secret value&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;
+A quick fix could be to replace the use of &lt;code&gt;java.util.Random&lt;/code&gt; with something stronger, such as &lt;code&gt;java.security.SecureRandom&lt;/code&gt;.
+&lt;/p&gt;
+&lt;p&gt;
+&lt;b&gt;Vulnerable Code:&lt;/b&gt;&lt;br/&gt;
+&lt;pre&gt;String generateSecretToken() {
+    Random r = new Random();
+    return Long.toHexString(r.nextLong());
+}&lt;/pre&gt;
+&lt;/p&gt;
+&lt;p&gt;
+&lt;b&gt;Solution:&lt;/b&gt;
+&lt;pre&gt;import org.apache.commons.codec.binary.Hex;
+
+String generateSecretToken() {
+    SecureRandom secRandom = new SecureRandom();
+
+    byte[] result = new byte[32];
+    secRandom.nextBytes(result);
+    return Hex.encodeHexString(result);
+}&lt;/pre&gt;
+&lt;/p&gt;
+&lt;br/&gt;
+&lt;p&gt;
+&lt;b&gt;References&lt;/b&gt;&lt;br/&gt;
+&lt;a href="https://jazzy.id.au/2010/09/20/cracking_random_number_generators_part_1.html"&gt;Cracking Random Number Generators - Part 1 (https://jazzy.id.au)&lt;/a&gt;&lt;br/&gt;
+&lt;a href="https://www.securecoding.cert.org/confluence/display/java/MSC02-J.+Generate+strong+random+numbers"&gt;CERT: MSC02-J. Generate strong random numbers&lt;/a&gt;&lt;br/&gt;
+&lt;a href="https://cwe.mitre.org/data/definitions/330.html"&gt;CWE-330: Use of Insufficiently Random Values&lt;/a&gt;&lt;br/&gt;
+&lt;a href="https://blog.h3xstream.com/2014/12/predicting-struts-csrf-token-cve-2014.html"&gt;Predicting Struts CSRF Token (Example of real-life vulnerability and exploitation)&lt;/a&gt;
+&lt;/p&gt;
+
+        </Details></BugPattern><BugCode abbrev='SECPR'><Description>Predictable Pseudo Random Generator</Description></BugCode><Errors missingClasses='0' errors='0'></Errors><FindBugsSummary num_packages='1' total_classes='1' priority_2='1' total_size='9' clock_seconds='4.74' referenced_classes='16' vm_version='14+36-1461' total_bugs='1' java_version='14' gc_seconds='0.02' alloc_mbytes='512.00' cpu_seconds='14.56' peak_mbytes='198.89' timestamp='Mon, 4 Jan 2021 18:08:09 +0100'><FileStats path='Prueba.java' size='9' bugHash='f604f567b03a692c227a3997bd3f177e' bugCount='1'></FileStats><PackageStats package='' total_bugs='1' priority_2='1' total_size='9' total_types='1'><ClassStats bugs='1' size='9' priority_2='1' interface='false' sourceFile='Prueba.java' class='Prueba'></ClassStats></PackageStats><FindBugsProfile><ClassProfile avgMicrosecondsPerInvocation='2643' totalMilliseconds='1031' name='edu.umd.cs.findbugs.classfile.engine.ClassInfoAnalysisEngine' maxMicrosecondsPerInvocation='46860' standardDeviationMicrosecondsPerInvocation='5078' invocations='390'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='617' totalMilliseconds='242' name='edu.umd.cs.findbugs.classfile.engine.ClassDataAnalysisEngine' maxMicrosecondsPerInvocation='7001' standardDeviationMicrosecondsPerInvocation='630' invocations='392'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='12345' totalMilliseconds='197' name='edu.umd.cs.findbugs.detect.FieldItemSummary' maxMicrosecondsPerInvocation='44394' standardDeviationMicrosecondsPerInvocation='13367' invocations='16'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='56282' totalMilliseconds='168' name='edu.umd.cs.findbugs.classfile.engine.bcel.MethodGenFactory' maxMicrosecondsPerInvocation='167231' standardDeviationMicrosecondsPerInvocation='78452' invocations='3'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='1859' totalMilliseconds='126' name='edu.umd.cs.findbugs.OpcodeStack$JumpInfoFactory' maxMicrosecondsPerInvocation='11454' standardDeviationMicrosecondsPerInvocation='2241' invocations='68'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='7327' totalMilliseconds='117' name='edu.umd.cs.findbugs.detect.FindNoSideEffectMethods' maxMicrosecondsPerInvocation='33682' standardDeviationMicrosecondsPerInvocation='8479' invocations='16'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='272' totalMilliseconds='96' name='edu.umd.cs.findbugs.util.TopologicalSort' maxMicrosecondsPerInvocation='4695' standardDeviationMicrosecondsPerInvocation='551' invocations='356'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='1975' totalMilliseconds='92' name='edu.umd.cs.findbugs.classfile.engine.bcel.JavaClassAnalysisEngine' maxMicrosecondsPerInvocation='51195' standardDeviationMicrosecondsPerInvocation='7599' invocations='47'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='5282' totalMilliseconds='84' name='edu.umd.cs.findbugs.detect.NoteDirectlyRelevantTypeQualifiers' maxMicrosecondsPerInvocation='35579' standardDeviationMicrosecondsPerInvocation='8537' invocations='16'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='4263' totalMilliseconds='68' name='edu.umd.cs.findbugs.detect.ExplicitSerialization' maxMicrosecondsPerInvocation='60314' standardDeviationMicrosecondsPerInvocation='14588' invocations='16'></ClassProfile><ClassProfile avgMicrosecondsPerInvocation='3388' totalMilliseconds='54' name='edu.umd.cs.findbugs.detect.FunctionsThatMightBeMistakenForProcedures' maxMicrosecondsPerInvocation='17137' standardDeviationMicrosecondsPerInvocation='4767' invocations='16'></ClassProfile></FindBugsProfile></FindBugsSummary><ClassFeatures></ClassFeatures><History></History></BugCollection>
